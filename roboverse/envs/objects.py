@@ -22,12 +22,12 @@ def table():
     return table_id
 
 
-def tray(base_position=(.60, 0.3, -.37), scale=0.5):
+def tray(base_position=(.60, 0.3, -.37)):
     p.setAdditionalSearchPath(pybullet_data.getDataPath())
     tray_id = p.loadURDF('tray/tray.urdf',
                          basePosition=base_position,
                          baseOrientation=[0, 0, 0.707107, 0.707107],
-                         globalScaling=scale)
+                         globalScaling=0.5)
     return tray_id
 
 

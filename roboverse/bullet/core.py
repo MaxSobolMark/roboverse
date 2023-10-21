@@ -33,7 +33,3 @@ def setup_headless(timestep=1./240, solver_iterations=150, gravity=-10):
     p.setGravity(0, 0, gravity)
     p.setRealTimeSimulation(False)
     p.stepSimulation()
-
-
-def load_state(path):
-    p.restoreState(fileName=path)

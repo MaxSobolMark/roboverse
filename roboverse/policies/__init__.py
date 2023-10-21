@@ -1,34 +1,34 @@
-from .pick_place import PickPlace, PickPlaceOpen, PickPlaceOpenSuboptimal
+from .pick_place import PickPlace
 from .drawer_open import DrawerOpen
-from .grasp import Grasp, GraspTransfer, GraspTransferSuboptimal
-from .place import Place
+from .grasp import Grasp
 from .button_press import ButtonPress
-from .drawer_open_transfer import (
-    DrawerOpenTransfer,
-    DrawerOpenTransferSuboptimal
-)
-from .drawer_close_open_transfer import (
-    DrawerCloseOpenTransfer,
-    DrawerCloseOpenTransferSuboptimal
-)
+from .pick_place_miss import PickPlaceMiss
+from .bin_arm_only import BinArm
+from .bin_sort import BinSort
+from .bin_sort_neutral import BinSortNeutral
+from .bin_sort_neutral_stored import BinSortNeutralStored
+from .stitching import Stitching
+from .bin_sort_mult import BinSortNeutralMult, BinSortMult
+from .bin_sort_mult_stored import BinSortNeutralMultStored, BinSortMultStored
+from .bin_sort_mult_storedseg import BinSortNeutralMultStoredSeg, BinSortMultStoredSeg
 
 policies = dict(
     grasp=Grasp,
-    grasp_transfer=GraspTransfer,
-    grasp_transfer_suboptimal=GraspTransferSuboptimal,
     pickplace=PickPlace,
-    pickplace_open=PickPlaceOpen,
     drawer_open=DrawerOpen,
     button_press=ButtonPress,
-    drawer_open_transfer=DrawerOpenTransfer,
-    place=Place,
-    drawer_close_open_transfer=DrawerCloseOpenTransfer,
+    pickplacemiss=PickPlaceMiss,
+    binsort=BinSort,
+    binsortneutral=BinSortNeutral,
+    binsortneutralstored=BinSortNeutralStored,
+    stitching=Stitching,
+    binsortmult=BinSortMult,
+    binsortneutralmult=BinSortNeutralMult,
+    binsortneutralmultstored=BinSortNeutralMultStored,
+    binsortmultstored=BinSortMultStored,
+    binsortmultstoredseg=BinSortMultStoredSeg,
+    binsortneutralmultstoredseg=BinSortNeutralMultStoredSeg,
+    binarm=BinArm
 )
 
-suboptimal_polices = dict(
-    drawer_open_transfer_suboptimal=DrawerOpenTransferSuboptimal,
-    drawer_close_open_transfer_suboptimal=DrawerCloseOpenTransferSuboptimal,
-    pickplace_open_suboptimal=PickPlaceOpenSuboptimal,
-)
-
-policies.update(suboptimal_polices)
+from .policy_wrappers import *

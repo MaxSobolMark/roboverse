@@ -5,7 +5,8 @@ from roboverse.bullet.serializable import Serializable
 import roboverse.bullet as bullet
 from roboverse.envs import objects
 from roboverse.bullet import object_utils
-from .multi_object import MultiObjectEnv
+# from .multi_object import MultiObjectEnv
+from roboverse.envs.multi_object import MultiObjectEnv
 
 END_EFFECTOR_INDEX = 8
 RESET_JOINT_VALUES = [1.57, -0.6, -0.6, 0, -1.57, 0., 0., 0.036, -0.036]
@@ -24,7 +25,7 @@ GRIPPER_LIMITS_HIGH = JOINT_LIMIT_UPPER[-2:]
 GRIPPER_OPEN_STATE = [0.036, -0.036]
 GRIPPER_CLOSED_STATE = [0.015, -0.015]
 
-ACTION_DIM = 8
+ACTION_DIM = 7
 
 
 class Widow250Env(gym.Env, Serializable):
@@ -32,7 +33,7 @@ class Widow250Env(gym.Env, Serializable):
     def __init__(self,
                  control_mode='continuous',
                  observation_mode='pixels',
-                 observation_img_dim=48,
+                 observation_img_dim=128,
                  transpose_image=True,
 
                  object_names=('beer_bottle', 'gatorade'),
@@ -51,15 +52,12 @@ class Widow250Env(gym.Env, Serializable):
                  grasp_success_height_threshold=-0.25,
                  grasp_success_object_gripper_threshold=0.1,
 
-                 use_neutral_action=False,
-                 neutral_gripper_open=True,
-
                  xyz_action_scale=0.2,
                  abc_action_scale=20.0,
                  gripper_action_scale=20.0,
 
-                 ee_pos_high=(0.8, .4, -0.1),
                  ee_pos_low=(.4, -.2, -.34),
+                 ee_pos_high=(0.8, .4, -0.1),
                  camera_target_pos=(0.6, 0.2, -0.28),
                  camera_distance=0.29,
                  camera_roll=0.0,
@@ -68,12 +66,21 @@ class Widow250Env(gym.Env, Serializable):
 
                  gui=False,
                  in_vr_replay=False,
+
+                 terminate_on_success=True,
+                 max_reward=1,
+                 objects_in_container=False,
                  ):
+        print(object_names)
+
+        self.render_enabled = True
 
         self.control_mode = control_mode
         self.observation_mode = observation_mode
         self.observation_img_dim = observation_img_dim
         self.transpose_image = transpose_image
+        self.max_reward = max_reward
+        self.objects_in_container=objects_in_container
 
         self.num_sim_steps = num_sim_steps
         self.num_sim_steps_reset = num_sim_steps_reset
@@ -84,16 +91,7 @@ class Widow250Env(gym.Env, Serializable):
         self.grasp_success_object_gripper_threshold = \
             grasp_success_object_gripper_threshold
 
-        self.use_neutral_action = use_neutral_action
-        self.neutral_gripper_open = neutral_gripper_open
-
         self.gui = gui
-
-        # TODO(avi): This hard-coding should be removed
-        self.fc_input_key = 'state'
-        self.cnn_input_key = 'image'
-        self.terminates = False
-        self.scripted_traj_len = 30
 
         # TODO(avi): Add limits to ee orientation as well
         self.ee_pos_high = ee_pos_high
@@ -150,9 +148,14 @@ class Widow250Env(gym.Env, Serializable):
 
         self.is_gripper_open = True  # TODO(avi): Clean this up
 
+        self.terminate_on_success = terminate_on_success
+
         self.reset()
         self.ee_pos_init, self.ee_quat_init = bullet.get_link_state(
             self.robot_id, self.end_effector_index)
+
+    def disable_render(self):
+        self.render_enabled = False
 
     def _load_meshes(self):
         self.table_id = objects.table()
@@ -170,8 +173,7 @@ class Widow250Env(gym.Env, Serializable):
                 self.num_objects,
             )
             self.original_object_positions = object_positions
-        for object_name, object_position in zip(self.object_names,
-                                                object_positions):
+        for object_name, object_position in zip(self.object_names, object_positions):
             self.objects[object_name] = object_utils.load_object(
                 object_name,
                 object_position,
@@ -192,18 +194,16 @@ class Widow250Env(gym.Env, Serializable):
         return self.get_observation()
 
     def step(self, action):
-
         # TODO Clean this up
         if np.isnan(np.sum(action)):
             print('action', action)
-            raise RuntimeError('Action has NaN entries')
+            assert False
 
         action = np.clip(action, -1, +1)  # TODO Clean this up
 
         xyz_action = action[:3]  # ee position actions
         abc_action = action[3:6]  # ee orientation actions
         gripper_action = action[6]
-        neutral_action = action[7]
 
         ee_pos, ee_quat = bullet.get_link_state(
             self.robot_id, self.end_effector_index)
@@ -257,21 +257,14 @@ class Widow250Env(gym.Env, Serializable):
             joint_range=JOINT_RANGE,
             num_sim_steps=num_sim_steps)
 
-        if self.use_neutral_action and neutral_action > 0.5:
-            if self.neutral_gripper_open:
-                bullet.move_to_neutral(
-                    self.robot_id,
-                    self.reset_joint_indices,
-                    RESET_JOINT_VALUES)
-            else:
-                bullet.move_to_neutral(
-                    self.robot_id,
-                    self.reset_joint_indices,
-                    RESET_JOINT_VALUES_GRIPPER_CLOSED)
-
         info = self.get_info()
         reward = self.get_reward(info)
         done = False
+        if self.terminate_on_success:
+            if reward >= self.max_reward:
+                done = True
+            elif self.objects_in_container and 'all_placed' in info and info['all_placed']:
+                done = True
         return self.get_observation(), reward, done, info
 
     def get_observation(self):
@@ -279,18 +272,15 @@ class Widow250Env(gym.Env, Serializable):
         gripper_binary_state = [float(self.is_gripper_open)]
         ee_pos, ee_quat = bullet.get_link_state(
             self.robot_id, self.end_effector_index)
-        object_position, object_orientation = bullet.get_object_position(
-            self.objects[self.target_object])
         if self.observation_mode == 'pixels':
-            image_observation = self.render_obs()
-            image_observation = np.float32(image_observation.flatten()) / 255.0
             observation = {
-                'object_position': object_position,
-                'object_orientation': object_orientation,
                 'state': np.concatenate(
                     (ee_pos, ee_quat, gripper_state, gripper_binary_state)),
-                'image': image_observation
             }
+            if self.render_enabled:
+                image_observation = self.render_obs()
+                image_observation = np.float32(image_observation.flatten()) / 255.0
+                observation['image'] = image_observation
         else:
             raise NotImplementedError
 

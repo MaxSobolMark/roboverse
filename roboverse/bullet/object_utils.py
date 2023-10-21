@@ -13,7 +13,7 @@ SHAPENET_ASSET_PATH = os.path.join(ASSET_PATH, 'bullet-objects/ShapeNetCore')
 BASE_ASSET_PATH = os.path.join(ASSET_PATH, 'bullet-objects')
 BULLET3_ASSET_PATH = os.path.join(BASE_ASSET_PATH, 'bullet3')
 
-MAX_ATTEMPTS_TO_GENERATE_OBJECT_POSITIONS = 200
+MAX_ATTEMPTS_TO_GENERATE_OBJECT_POSITIONS = 600
 SHAPENET_SCALE = 0.5
 
 
@@ -35,6 +35,55 @@ def check_in_container(object_name,
 
     return success
 
+def check_over_container(object_name,
+                       object_id_map,
+                       container_pos,
+                       place_success_height_threshold,
+                       place_success_radius_threshold,
+                       ):
+    object_pos, _ = get_object_position(object_id_map[object_name])
+    object_height = object_pos[2]
+    object_xy = object_pos[:2]
+    container_center_xy = container_pos[:2]
+    success = False
+    
+    object_container_distance = np.linalg.norm(object_xy - container_center_xy)
+    if object_container_distance < place_success_radius_threshold:
+        success = True
+
+    return success
+
+def check_near_container(object_name,
+                         object_id_map,
+                         container_pos,
+                         object_container_success_threshold,
+                       ):
+    object_pos, _ = get_object_position(object_id_map[object_name])
+    object_xy = object_pos[:2]
+    container_center_xy = container_pos[:2]
+    object_container_distance = np.linalg.norm(object_xy - container_center_xy)
+    if object_container_distance < object_container_success_threshold:
+        success = True
+    else:
+        success = False
+    # print("obj", object_container_distance)
+    return success
+def check_placed_ground(object_name,
+                         object_id_map,
+                         container_pos,
+                         object_container_success_threshold,
+                         place_success_height_threshold
+                       ):
+    object_pos, _ = get_object_position(object_id_map[object_name])
+    object_xy = object_pos[:2]
+    container_center_xy = container_pos[:2]
+    object_container_distance = np.linalg.norm(object_xy - container_center_xy)
+    if object_container_distance < object_container_success_threshold and object_pos[2] < place_success_height_threshold:
+        success = True
+    else:
+        success = False
+    # print("obj", object_container_distance)
+    return success
 
 def check_grasp(object_name,
                 object_id_map,
@@ -56,7 +105,23 @@ def check_grasp(object_name,
             success = True
 
     return success
+def check_grasp_wo_height(object_name,
+                object_id_map,
+                robot_id,
+                end_effector_index,
+                grasp_success_object_gripper_threshold,
+                ):
+    object_pos, _ = get_object_position(object_id_map[object_name])
+    success = False
+    ee_pos, _ = get_link_state(
+        robot_id, end_effector_index)
+    object_gripper_distance = np.linalg.norm(
+        object_pos - ee_pos)
+    if object_gripper_distance < \
+            grasp_success_object_gripper_threshold:
+        success = True
 
+    return success
 
 # TODO(avi) Need to clean unify these object position functions
 def generate_object_positions_single(
@@ -109,6 +174,51 @@ def generate_object_positions_v2(
             raise ValueError('Min distance could not be assured')
 
     return large_object_position, small_object_positions
+
+# generalized function for generating object positions
+def generate_object_positions_v3(
+        small_object_position_low, small_object_position_high,
+        large_object_positions_low, large_object_positions_high,
+        min_distance_small_obj=0.07, min_distance_large_obj=0.1,
+        num_small=2, num_large=2):
+
+    valid = False
+    max_attempts = MAX_ATTEMPTS_TO_GENERATE_OBJECT_POSITIONS
+    i = 0
+    while not valid:
+        large_object_positions = []
+        for i in range(num_large):
+            large_object_position = np.random.uniform(
+                low=large_object_positions_low[i], high=large_object_positions_high[i])
+            large_object_positions.append(large_object_position)
+        # large_object_position = np.reshape(large_object_position, (1, 3))
+
+        small_object_positions = []
+        for _ in range(num_small):
+            small_object_position = np.random.uniform(
+                low=small_object_position_low, high=small_object_position_high)
+            small_object_positions.append(small_object_position)
+
+        valid_1 = True
+        for i in range(num_large):
+            for j in range(num_large):
+                if i != j:
+                    valid_1 = valid_1 and np.linalg.norm(large_object_positions[i] - large_object_positions[j]) > min_distance_large_obj
+        valid_2 = True
+        for i in range(num_small):
+            for j in range(num_small):
+                if i != j:
+                    valid_2 = valid_2 and np.linalg.norm(small_object_positions[i] - small_object_positions[j]) > min_distance_small_obj
+        
+        valid_3 = True
+        for i in range(num_large):
+            for j in range(num_small):
+                valid_3 = valid_3 and np.linalg.norm(large_object_positions[i] - small_object_positions[j]) > min_distance_large_obj
+
+        valid = valid_1 and valid_2 and valid_3
+        if i > max_attempts:
+            raise ValueError('Min distance could not be assured')
+    return large_object_positions, small_object_positions
 
 
 def generate_object_positions(object_position_low, object_position_high,
@@ -220,16 +330,35 @@ BULLET_OBJECT_SPECS = dict(
         baseOrientation=(0, 0, 0.707107, 0.707107),
         globalScaling=0.07,
     ),
+    bowl_small_pos1=dict(
+        # fileName=os.path.join(BASE_ASSET_PATH, 'box_open_top/box_open_top.urdf'),
+        fileName=os.path.join(BASE_ASSET_PATH, 'box_open_top/long_box_open_top_v3.urdf'),
+        basePosition=(.72, 0.23, -.35),
+        baseOrientation=(0, 0, 0.707107, 0.707107),
+        globalScaling=0.07,
+    ),
+    bowl_small_pos2=dict(
+        fileName=os.path.join(BASE_ASSET_PATH, 'box_open_top/long_box_open_top_v3.urdf'),
+        basePosition=(.72, 0.23, -.35),
+        baseOrientation=(0, 0, 0.707107, 0.707107),
+        globalScaling=0.07,
+    ),
+    thin_bowl_small_pos1=dict(
+        # fileName=os.path.join(BASE_ASSET_PATH, 'box_open_top/box_open_top.urdf'),
+        fileName=os.path.join(BASE_ASSET_PATH, 'box_open_top/thin_long_box_open_top_v3.urdf'),
+        basePosition=(.72, 0.23, -.35),
+        baseOrientation=(0, 0, 0.707107, 0.707107),
+        globalScaling=0.07,
+    ),
+    thin_bowl_small_pos2=dict(
+        fileName=os.path.join(BASE_ASSET_PATH, 'box_open_top/thin_long_box_open_top_v3.urdf'),
+        basePosition=(.72, 0.23, -.35),
+        baseOrientation=(0, 0, 0.707107, 0.707107),
+        globalScaling=0.07,
+    ),
     drawer=dict(
         fileName=os.path.join(
             BASE_ASSET_PATH, 'drawer/drawer_with_tray_inside.urdf'),
-        basePosition=(.7, 0.2, -.35),
-        baseOrientation=(0, 0, 0.707107, 0.707107),
-        globalScaling=0.1,
-    ),
-    drawer_no_handle=dict(
-        fileName=os.path.join(
-            BASE_ASSET_PATH, 'drawer/drawer_no_handle.urdf'),
         basePosition=(.7, 0.2, -.35),
         baseOrientation=(0, 0, 0.707107, 0.707107),
         globalScaling=0.1,
@@ -246,6 +375,7 @@ BULLET_OBJECT_SPECS = dict(
         basePosition=(.7, 0.2, -.35),
         baseOrientation=(0, 0, 0.707107, 0.707107),
         globalScaling=0.25,
+        useFixedBase=1,
     ),
     cube=dict(
         fileName=os.path.join(
@@ -253,13 +383,14 @@ BULLET_OBJECT_SPECS = dict(
         basePosition=(.7, 0.2, -.35),
         baseOrientation=(0, 0, 0.707107, 0.707107),
         globalScaling=0.05,
+        useFixedBase=1,
     ),
     spam=dict(
         fileName=os.path.join(
             BASE_ASSET_PATH, 'spam/spam.urdf'),
         basePosition=(.7, 0.2, -.35),
         baseOrientation=(0, 0, 0.707107, 0.707107),
-        globalScaling=0.25,
+        globalScaling=0.10,
     ),
     pan_tefal=dict(
         fileName=os.path.join(
@@ -272,6 +403,14 @@ BULLET_OBJECT_SPECS = dict(
     table_top=dict(
         fileName=os.path.join(
             BULLET3_ASSET_PATH, 'table/table2.urdf'),
+        basePosition=(.65, 0.3, -.3),
+        baseOrientation=(0, 0, 0.707107, 0.707107),
+        globalScaling=0.8,
+        useFixedBase=1,
+    ),
+    table_top_thin=dict(
+        fileName=os.path.join(
+            BULLET3_ASSET_PATH, 'table/tablethin.urdf'),
         basePosition=(.65, 0.3, -.3),
         baseOrientation=(0, 0, 0.707107, 0.707107),
         globalScaling=0.8,

@@ -20,9 +20,10 @@ class MultiObjectEnv:
         self.num_objects = num_objects
 
     def reset(self):
-        chosen_obj_idx = np.random.randint(0, len(self.possible_objects),
-                                           size=self.num_objects)
-        self.object_names = tuple(self.possible_objects[chosen_obj_idx])
+        if not self.in_vr_replay:
+            chosen_obj_idx = np.random.randint(0, len(self.possible_objects),
+                                               size=self.num_objects)
+            self.object_names = tuple(self.possible_objects[chosen_obj_idx])
 
         self.object_scales = dict()
         self.object_orientations = dict()

@@ -57,7 +57,8 @@ CONTAINER_CONFIGS = {
         'container_position_default': (.50, 0.26, -.30),
         'container_position_z': -0.35,
         'place_success_height_threshold': -0.32,
-        'place_success_radius_threshold': 0.04,
+        # 'place_success_radius_threshold': 0.04,
+        'place_success_radius_threshold': 0.05,
         'container_orientation': (0, 0, 0.707107, 0.707107),
         'container_scale': 0.07,
         'min_distance_from_object': 0.11,
@@ -164,6 +165,471 @@ CONTAINER_CONFIGS = {
         'min_distance_from_object': 0.1,
     }
 }
+
+
+CONTAINER_CONFIGS_BIN_SORT = {
+    'plate': {
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.46,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'cube_concave': {
+        'container_name': 'cube_concave',
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.06,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'table_top': {
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.13,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.05,
+        'min_distance_from_object': 0.11,
+    },
+    'bowl_small_pos1': {
+        'container_position_low': (.75, 0.26, -.30),
+        'container_position_high': (.75, 0.26, -.30),
+        'container_position_default': (.50, 0.26, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.08,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.28,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+        'push_success_radius_threshold': 0.09,
+    },
+    'bowl_small_pos2': {
+        'container_position_low': (.45, 0.26, -.30),
+        'container_position_high': (.45, 0.26, -.30),
+        'container_position_default': (.50, 0.26, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.08,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.28,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+        'push_success_radius_threshold': 0.09,
+    },
+    'thin_bowl_small_pos1': {
+        'container_position_low': (.75, 0.26, -.30),
+        'container_position_high': (.75, 0.26, -.30),
+        'container_position_default': (.50, 0.26, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.08,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.28,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+        'push_success_radius_threshold': 0.09,
+    },
+    'thin_bowl_small_pos2': {
+        'container_position_low': (.45, 0.26, -.30),
+        'container_position_high': (.45, 0.26, -.30),
+        'container_position_default': (.50, 0.26, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.08,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.28,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+        'push_success_radius_threshold': 0.09,
+    },
+    'tray': {
+        'container_position_low': (.5, 0.25, -.30),
+        'container_position_high': (.7, 0.25, -.30),
+        'container_position_default': (.5, 0.25, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.18,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'open_box': {
+        'container_position_low': (.5, 0.23, -.30),
+        'container_position_high': (.7, 0.23, -.30),
+        'container_position_default': (.5, 0.23, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.1,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'pan_tefal': {
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.24, -.30),
+        'container_position_default': (.65, 0.23, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.4,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.1,
+    },
+    'husky': {
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.13,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.10,
+    },
+    'marble_cube': {
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.60, 0.24, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.07,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.10,
+    },
+    'basket': {
+        'container_name': 'basket',
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.55, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 1.68,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.28,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'checkerboard_table': {
+        'container_name': 'checkerboard_table',
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.08,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.05,
+        'min_distance_from_object': 0.11,
+    },
+    'torus': {
+        'container_position_low': (.50, 0.22, -.30),
+        'container_position_high': (.70, 0.26, -.30),
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (1, 1, 1, 1),
+        'container_scale': 0.15,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.1,
+    },
+    'cube': {
+        'container_position_low': (.5, 0.22, -.30),
+        'container_position_high': (.7, 0.24, -.30),
+        'container_position_default': (.5, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.05,
+        'container_position_z': -0.35,
+        'place_success_radius_threshold': 0.03,
+        'place_success_height_threshold': -0.23,
+        'min_distance_from_object': 0.1,
+    }
+}
+
+
+
+diverse_low = (0.4, 0.1, -.3)
+diverse_high = (0.8, 0.3, -0.3)
+
+CONTAINER_CONFIGS_DIVERSE = {
+    'plate': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.46,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'cube_concave': {
+        'container_name': 'cube_concave',
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.06,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'table_top': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.13,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.05,
+        'min_distance_from_object': 0.11,
+    },
+    'bowl_small': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.26, -.30),
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.32,
+        # 'place_success_radius_threshold': 0.04,
+        'place_success_radius_threshold': 0.05,
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.07,
+        'min_distance_from_object': 0.11,
+    },
+    'tray': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.5, 0.25, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.18,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'open_box': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.5, 0.23, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.1,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'pan_tefal': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.65, 0.23, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.4,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.1,
+    },
+    'husky': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.13,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.10,
+    },
+    'marble_cube': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.60, 0.24, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.07,
+        'container_position_z': -0.35,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.10,
+    },
+    'basket': {
+        'container_name': 'basket',
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.55, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 1.68,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.28,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.11,
+    },
+    'checkerboard_table': {
+        'container_name': 'checkerboard_table',
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.08,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.23,
+        'place_success_radius_threshold': 0.05,
+        'min_distance_from_object': 0.11,
+    },
+    'torus': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.50, 0.22, -.30),
+        'container_orientation': (1, 1, 1, 1),
+        'container_scale': 0.15,
+        'container_position_z': -0.37,
+        'place_success_height_threshold': -0.32,
+        'place_success_radius_threshold': 0.04,
+        'min_distance_from_object': 0.1,
+    },
+    'cube': {
+        'container_position_low': diverse_low,
+        'container_position_high': diverse_high,
+        'container_position_default': (.5, 0.22, -.30),
+        'container_orientation': (0, 0, 0.707107, 0.707107),
+        'container_scale': 0.05,
+        'container_position_z': -0.35,
+        'place_success_radius_threshold': 0.03,
+        'place_success_height_threshold': -0.23,
+        'min_distance_from_object': 0.1,
+    }
+}
+
+import copy
+CONTAINER_CONFIGS_HALVED = {}
+for key, value in CONTAINER_CONFIGS.items():
+    CONTAINER_CONFIGS_HALVED[key] = copy.deepcopy(value)
+    x1, y1, z1 = CONTAINER_CONFIGS_HALVED[key]['container_position_low']
+    x2, y2, z2 = CONTAINER_CONFIGS_HALVED[key]['container_position_high']
+    CONTAINER_CONFIGS_HALVED[key]['container_position_low'] = (x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, z1 + (z2 - z1) / 2)
+    CONTAINER_CONFIGS_HALVED[key]['container_position_default'] = (x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, z1 + (z2 - z1) / 2)
+
+CONTAINER_CONFIGS_THIRD = {}
+for key, value in CONTAINER_CONFIGS.items():
+    CONTAINER_CONFIGS_THIRD[key] = copy.deepcopy(value)
+    x1, y1, z1 = CONTAINER_CONFIGS_THIRD[key]['container_position_low']
+    x2, y2, z2 = CONTAINER_CONFIGS_THIRD[key]['container_position_high']
+    CONTAINER_CONFIGS_THIRD[key]['container_position_low'] = (x1 + 2 * (x2 - x1) / 3, y1 + 2 * (y2 - y1) / 3, z1 + 2 * (z2 - z1) / 3)
+    CONTAINER_CONFIGS_THIRD[key]['container_position_default'] = (x1 + 2 * (x2 - x1) / 3, y1 + 2 * (y2 - y1) / 3, z1 + 2 * (z2 - z1) / 3)
+
+CONTAINER_CONFIGS_DIVERSE_HALVED = {}
+for key, value in CONTAINER_CONFIGS_DIVERSE.items():
+    CONTAINER_CONFIGS_DIVERSE_HALVED[key] = copy.deepcopy(value)
+    x1, y1, z1 = CONTAINER_CONFIGS_DIVERSE_HALVED[key]['container_position_low']
+    x2, y2, z2 = CONTAINER_CONFIGS_DIVERSE_HALVED[key]['container_position_high']
+    CONTAINER_CONFIGS_DIVERSE_HALVED[key]['container_position_low'] = (x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, z1 + (z2 - z1) / 2)
+    CONTAINER_CONFIGS_DIVERSE_HALVED[key]['container_position_default'] = (x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2, z1 + (z2 - z1) / 2)
+
+CONTAINER_CONFIGS_DIVERSE_THIRD = {}
+for key, value in CONTAINER_CONFIGS_DIVERSE.items():
+    CONTAINER_CONFIGS_DIVERSE_THIRD[key] = copy.deepcopy(value)
+    x1, y1, z1 = CONTAINER_CONFIGS_DIVERSE_THIRD[key]['container_position_low']
+    x2, y2, z2 = CONTAINER_CONFIGS_DIVERSE_THIRD[key]['container_position_high']
+    CONTAINER_CONFIGS_DIVERSE_THIRD[key]['container_position_low'] = (x1 + 2 * (x2 - x1) / 3, y1 + 2 * (y2 - y1) / 3, z1 + 2 * (z2 - z1) / 3)
+    CONTAINER_CONFIGS_DIVERSE_THIRD[key]['container_position_default'] = (x1 + 2 * (x2 - x1) / 3, y1 + 2 * (y2 - y1) / 3, z1 + 2 * (z2 - z1) / 3)
+
+# 'conic_cup',
+# 'fountain_vase',
+# 'circular_table',
+# 'hex_deep_bowl',
+# 'smushed_dumbbell',
+# 'square_prism_bin',
+# 'narrow_tray',
+# 'colunnade_top',
+# 'stalagcite_chunk',
+# 'bongo_drum_bowl',
+# 'pacifier_vase',
+# 'beehive_funnel',
+# 'crooked_lid_trash_can',
+# 'toilet_bowl',
+# 'pepsi_bottle',
+# 'tongue_chair',
+# 'modern_canoe',
+# 'pear_ringed_vase',
+
+BIN_SORT_OBJECTS = [
+    'ball',             # green_ball
+    'circular_table',   # blue_hourglass
+    'conic_cup',        # white_stub
+    'aero_cylinder',    # glass_cylinder
+    'fountain_vase',    # golden_vase
+    'toilet_bowl',      # white_toilet
+    'pepsi_bottle',     # red_pepsi
+    'shed',             # brown_box
+    'colunnade_top',    # silver_fountain
+    'stalagcite_chunk', # white_column
+    'bongo_drum_bowl',  # red_drum
+    'pacifier_vase',    # white_vase
+    'beehive_funnel',   # brown_beehive
+    'crooked_lid_trash_can', # gray_trashcan
+    'double_l_faucet',  # silver_faucet
+    'flowery_half_donut', # cyan_donut
+    't_cup',            # azure_cup
+    'two_handled_vase', # yellow_vase
+    'tongue_chair',     # red_chair
+    'square_prism_bin', # brown_bin
+    'thick_wood_chair', # wood_bench
+    'box_sofa',         # maroon_sofa
+    'pear_ringed_vase', # orange_piece
+    'short_handle_cup', # blue_cup
+    'curved_handle_cup', # pink_tea_cup
+    'jar',              # peanut_jar
+    'baseball_cap',     # golden_hat,
+    'spam', # spam
+    'smushed_dumbbell', 
+    'bathtub',
+    'trapezoidal_bin'
+]
+
+BIN_SORT_OBJECTS_NOISE = [
+    0.8,
+    0.4,
+    0.3,
+    0.7,
+    0.1,
+    0.6,
+    0.9,
+    0.5,
+    0.8,
+    0.4,
+    0.3,
+    0.7,
+    0.1,
+    0.6,
+    0.9,
+    0.5,
+     0.8,
+    0.4,
+    0.3,
+    0.7,
+    0.1,
+    0.6,
+    0.9,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+]
+
+assert len(BIN_SORT_OBJECTS) == len(BIN_SORT_OBJECTS_NOISE)
+BIN_SORT_OBJECTS2NOISE = {BIN_SORT_OBJECTS[i]: BIN_SORT_OBJECTS_NOISE[i] for i in range(len(BIN_SORT_OBJECTS))}
 
 TRAIN_OBJECTS = [
     'conic_cup',
@@ -310,7 +776,7 @@ OBJECT_SCALINGS = {
     'tongue_chair': 0.5,
     'oil_tanker': 1.0,
     'thick_wood_chair': 0.4,
-    'modern_canoe': 0.9,
+    'modern_canoe': 0.5,
     'pear_ringed_vase': 0.65,
     'short_handle_cup': 0.5,
     'curved_handle_cup': 0.5,
@@ -320,7 +786,7 @@ OBJECT_SCALINGS = {
 
     'teepee': 0.7,
     'trapezoidal_bin': 0.4,
-    'vintage_canoe': 1.0,
+    'vintage_canoe': 0.5,
     'bathtub': 0.4,
     'flowery_half_donut': 0.5,
     't_cup': 0.5,
@@ -340,6 +806,7 @@ OBJECT_SCALINGS = {
     'elliptical_capsule': 0.6,
     'aero_cylinder': 0.5,
     'grill_trash_can': 0.5,
+    'spam': 0.019
 }
 
 TEST_OBJECTS = [
@@ -420,6 +887,7 @@ OBJECT_ORIENTATIONS = {
     't_cup': (0, 0.707, 0.707, 0),
     'cookie_circular_lidless_tin': (0, 0, 1, 0),
     'box_sofa': (0, 0, 1, 0),
+    'spam': (0, 0, 1, 0),
     'baseball_cap': (0, -0.707, 0.707, 0),
     'two_layered_lampshade': (0, 0.707, 0.707, 0),
 
@@ -438,9 +906,9 @@ OBJECT_ORIENTATIONS = {
 
 GRASP_OFFSETS = {
     'bunsen_burner': (0, 0.01, 0.0),
-    'double_l_faucet': (0.01, 0.0, 0.0),
+    'double_l_faucet': (-0.01, -0.014, 0.0), #(0.01, 0.0, 0.0)
     'pear_ringed_vase': (0.0, 0.01, 0.0),
     'teepee': (0.0, 0.04, 0.0),
     'long_vase': (0.0, 0.03, 0.0),
-    'ball': (0, 0, 0.0)
+    'ball': (-0.01, -0.01, 0.0)
 }
